@@ -1,13 +1,11 @@
 import random
 
-#the following method searches for all question positions until the randomly selected question is reached
 def questionFinder():
     pos1 = 0
 
-    for i in range(0, selectedQuestionID):
+    for z in range(0, selectedQuestionID):
         try:
             pos1 = text.index("<question>", pos1)
-            print(pos1)
             pos1 += 1
         except:
             print("index out of range")
@@ -16,68 +14,79 @@ def questionFinder():
     pos1 += 9
     return pos1
 
-a = random.randint(1,10)
-b = random.randint(1,10)
-c = random.randint(1,10)
-
 userInputList = []
 
-print(a)
-print(b)
-print(c)
+answeredQuestions = []
 
 #path for the open-function is entered in unix style even on windows systems
-
 try:
     daten = open("C:/Users/whateverwhatever/Documents/unimportant_documents/quiz_questions.txt", "r")
     text = daten.read()
     daten.close()
-    print(text)
 except:
     print("cannot open file")
 
 
-print(text.find("question"))
-
-#prints the number of times the string "question" comes up in the file
-print(text.count("question"))
-
 numberOfQuestions = text.count("<question>")
-print(numberOfQuestions)
-selectedQuestionID = random.randint(1, numberOfQuestions)
-print("the randomly selected question is question number " + str(selectedQuestionID))
 
+alreadyAnswered = "firstLoop"
 
-sqid = questionFinder()
-print(sqid)
+#Python has no static typing but you have to define variables
+#and to define a variable you have to initialize it for some reason
+i = 0
 
-endOfQuestion = text.find("</question>", sqid)
-startOfAnswer = text.find("<answer>", sqid)
-endOfAnswer = text.find("</quizblock>", sqid)
+while True:
+    # had problems with using True, False, None, so I went with Strings
+    # one of Pythons weaknesses is that they change a lot of the syntax of existing languages
+    # like writing True and False with startin capital letters
 
-questionString = text[sqid:endOfQuestion]
-answerString = text[(startOfAnswer+8):endOfAnswer]
-answerStringList = answerString.split("<answer>")
+    selectedQuestionID = random.randint(1, numberOfQuestions)    
 
-for i in range(0, len(answerStringList)):
-    answerStringList[i] = answerStringList[i].replace("\n","")
-    answerStringList[i] = answerStringList[i].replace("</answer>", "")
-    answerStringList[i] = answerStringList[i].replace("\"","")
+    if alreadyAnswered != "firstLoop":
+        for j in range(0, len(answeredQuestions)):
+            if selectedQuestionID == answeredQuestions[j]:
+                alreadyAnswered = "yes"
 
-print("selected question: " + questionString)
-#user input
-for i in range(0, len(answerStringList)):
-    userInputList.append(input())
-
-
-for i in range(0, len(answerStringList)):
-    if userInputList[i] == answerStringList[i]:
-        print("you were correct in line " + str(i))
+    if alreadyAnswered != "yes":
+        answeredQuestions.append(selectedQuestionID)
     else:
-        print("the answer in line " + str(i) + " was: " + answerStringList[i])
+        alreadyAnswered = "blank"
+        continue
 
-print(str(userInputList))
-print(str(answerStringList))
+    print(str(answeredQuestions))
+
+    print("the randomly selected question is question number " + str(selectedQuestionID))
+    sqid = questionFinder()
+
+    endOfQuestion = text.find("</question>", sqid)
+    startOfAnswer = text.find("<answer>", sqid)
+    endOfAnswer = text.find("</quizblock>", sqid)
+
+    questionString = text[sqid:endOfQuestion]
+    answerString = text[(startOfAnswer+8):endOfAnswer]
+    answerStringList = answerString.split("<answer>")
+
+    for k in range(0, len(answerStringList)):
+        answerStringList[k] = answerStringList[k].replace("\n","")
+        answerStringList[k] = answerStringList[k].replace("</answer>", "")
+
+    print("selected question: " + questionString)
+    #user input
+    for l in range(0, len(answerStringList)):
+        userInputList.append(input())
+
+    for n in range(0, len(answerStringList)):
+        if userInputList[n] == answerStringList[n]:
+            print("you were correct in line " + str(n))
+        else:
+            print("the answer in line " + str(n) + " was: " + answerStringList[n])
+
+    userInputList.clear()
+    i +=1
+    if i == numberOfQuestions:
+        break
+
+    alreadyAnswered = "blank"
 
 
-#the program works so far
+#i have to use the random.shuffle method next time to shuffle lists randomly
