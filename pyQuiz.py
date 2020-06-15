@@ -18,25 +18,33 @@ userInputList = []
 
 answeredQuestions = []
 
+points = 0
+
+#booleans seem to be case sensitive and None for defining a bool with no value
+
 #path for the open-function is entered in unix style even on windows systems
+
 try:
-    daten = open("C:/Users/whateverwhatever/Documents/unimportant_documents/quiz_questions.txt", "r")
-    text = daten.read()
-    daten.close()
+    daten = open("C:/Users/whatever/Documents/unimportant_documents/umsatzsteuerrecht.txt", "r")
+    text = daten.read()    
 except:
     print("cannot open file")
+
+daten.close()
 
 
 numberOfQuestions = text.count("<question>")
 
 alreadyAnswered = "firstLoop"
 
-#Python has no static typing but you have to define variables
+#Python has no static typing but you have to define variables (Python weirdness)
 #and to define a variable you have to initialize it for some reason
+#i have to try to get into a python shell again some time
 i = 0
 
 while True:
-    # had problems with using True, False, None, so I went with Strings
+    # it seems to be impossible to only answer a question once
+    # booleans may be broken in Python, so I try it with Strings
     # one of Pythons weaknesses is that they change a lot of the syntax of existing languages
     # like writing True and False with startin capital letters
 
@@ -78,8 +86,12 @@ while True:
     for n in range(0, len(answerStringList)):
         if userInputList[n] == answerStringList[n]:
             print("you were correct in line " + str(n))
+            points += 1
         else:
             print("the answer in line " + str(n) + " was: " + answerStringList[n])
+
+    print("you have " + str(points) + " points.")
+    print()
 
     userInputList.clear()
     i +=1
@@ -89,4 +101,17 @@ while True:
     alreadyAnswered = "blank"
 
 
-#i have to use the random.shuffle method next time to shuffle lists randomly
+input()
+
+
+#the program works so far
+#i have to use the random.shuffle method next time
+
+#issue1: Antworten, die sich über mehrere Zeilen erstrecken
+#eine Lösung könnte sein, die userInputList und die answerStringList jeweils in einen String umzuwandeln und dann zu vergleichen ob sie übereinstimmen
+#so wäre es dann egal wann man in einer Antwort den Zeilenumbruch macht
+#wobei das wiederum bei mehrteiligen Antworten, die klar voneinander abzugrenzen sind, nicht so gut wäre
+
+#oder ich mache einfach in der quizdatei einen Zeilenumbruch und replace einfach "\n" mit "" und schließe den answer-tag erst nach mehreren Zeilen,
+#wenn die Antwort wirklich zuende ist
+#nur wie mache ich das dann beim Userinput?
