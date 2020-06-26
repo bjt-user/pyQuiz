@@ -14,6 +14,19 @@ def questionFinder():
     pos1 += 9
     return pos1
 
+def userInput(answerStringList, userInputList):
+    userAction = ""
+    for l in range(0, len(answerStringList)):
+        newInput = input()
+        userInputList.append(newInput)
+        if newInput == "quit":
+            userAction = "quit"
+            break
+            
+    return userAction
+
+    
+
 userInputList = []
 
 answeredQuestions = []
@@ -48,7 +61,7 @@ while True:
     # one of Pythons weaknesses is that they change a lot of the syntax of existing languages
     # like writing True and False with startin capital letters
 
-    selectedQuestionID = random.randint(1, numberOfQuestions)    
+    selectedQuestionID = random.randint(1, numberOfQuestions)
 
     if alreadyAnswered != "firstLoop":
         for j in range(0, len(answeredQuestions)):
@@ -79,9 +92,13 @@ while True:
         answerStringList[k] = answerStringList[k].replace("</answer>", "")
 
     print("selected question: " + questionString)
+
+
     #user input
-    for l in range(0, len(answerStringList)):
-        userInputList.append(input())
+    userAction = userInput(answerStringList, userInputList)
+    if userAction == "quit":
+        print("you have quit the program")
+        break
 
     for n in range(0, len(answerStringList)):
         if userInputList[n] == answerStringList[n]:
@@ -89,6 +106,7 @@ while True:
             points += 1
         else:
             print("the answer in line " + str(n) + " was: " + answerStringList[n])
+
 
     print("you have " + str(points) + " points.")
     print()
@@ -106,9 +124,10 @@ input()
 
 #the program works so far
 #i have to use the random.shuffle method next time
+#but i had to proove that i could do it this way
 
 #issue1: Antworten, die sich über mehrere Zeilen erstrecken
-#eine Lösung könnte sein, die userInputList und die answerStringList jeweils in einen String umzuwandeln und dann zu vergleichen ob sie übereinstimmen
+#eine Loesung könnte sein, die userInputList und die answerStringList jeweils in einen String umzuwandeln und dann zu vergleichen ob sie übereinstimmen
 #so wäre es dann egal wann man in einer Antwort den Zeilenumbruch macht
 #wobei das wiederum bei mehrteiligen Antworten, die klar voneinander abzugrenzen sind, nicht so gut wäre
 
